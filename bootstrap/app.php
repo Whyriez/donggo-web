@@ -27,4 +27,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, Request $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Ukuran data/file yang diunggah melebihi batas maksimal server (post_max_size).',
+                ], 413);
+            }
+
+            return back()->with('error', 'Ukuran file yang Anda unggah terlalu besar (melebihi batas server). Anda dapat menggunakan file lebih kecil atau meletakkan file langsung di storage/packages lalu klik "Sinkronkan Aset Storage".');
+        });
     })->create();
