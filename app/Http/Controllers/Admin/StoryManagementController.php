@@ -487,7 +487,7 @@ class StoryManagementController extends Controller
                 'title' => 'Dulo Yimindalalo',
                 'slug' => 'dulo-yimindalalo',
                 'category' => 'Cerita Rakyat Gorontalo',
-                'fase' => 'Fase B',
+                'fase' => 'Fase B1',
                 'description' => 'Kisah kearifan lokal Gorontalo tentang kerja sama, kebersamaan, dan keharmonisan hidup dalam Dulo Yimindalalo.',
                 'cover_pattern' => 'cover_dulo_yimindalalo',
                 'backsound_file' => 'backsound_story_2.mp3',
@@ -496,7 +496,7 @@ class StoryManagementController extends Controller
                 'title' => 'Mongoponula li Timayo',
                 'slug' => 'mongoponula-li-timayo',
                 'category' => 'Cerita Rakyat Gorontalo',
-                'fase' => 'Fase C',
+                'fase' => 'Fase B2',
                 'description' => 'Kisah petualangan dan keteladanan pemuda Gorontalo dalam Mongoponula li Timayo yang sarat nilai budi pekerti luhur.',
                 'cover_pattern' => 'cover_mongoponula_li_timayo',
                 'backsound_file' => 'backsound_story_3.mp3',
@@ -505,7 +505,7 @@ class StoryManagementController extends Controller
                 'title' => "Wala'o Tuturuga",
                 'slug' => 'walao-tuturuga',
                 'category' => 'Fabel & Cerita Binatang',
-                'fase' => 'Fase A',
+                'fase' => 'Fase B2',
                 'description' => 'Dongeng fabel Gorontalo tentang anak kura-kura yang sabar dan bijaksana dalam menghadapi berbagai rintangan kehidupan.',
                 'cover_pattern' => 'cover_walao_tuturuga',
                 'backsound_file' => 'backsound_story_4.mp3',
@@ -514,7 +514,7 @@ class StoryManagementController extends Controller
                 'title' => 'Yilongola Cici Hiyongo',
                 'slug' => 'yilongola-cici-hiyongo',
                 'category' => 'Cerita Rakyat Gorontalo',
-                'fase' => 'Fase B',
+                'fase' => 'Fase B1',
                 'description' => 'Kisah rakyat Gorontalo mengenai keceriaan, kasih sayang persaudaraan, dan ketabahan dalam keluarga.',
                 'cover_pattern' => 'cover_yilongola_cici_hiyongo',
                 'backsound_file' => 'backsound_story_5.mp3',
@@ -719,6 +719,11 @@ class StoryManagementController extends Controller
             $slug = $item['slug'] ?? Str::slug($title);
             $category = $item['category'] ?? 'Cerita Rakyat Gorontalo';
             $fase = $item['fase'] ?? 'Fase A';
+            if ($fase === 'Fase B') {
+                $fase = 'Fase B1';
+            } elseif ($fase === 'Fase C' || $fase === 'Fase D') {
+                $fase = 'Fase B2';
+            }
             $description = $item['description'] ?? null;
             $backsound = $item['backsoundFile'] ?? $item['backsound_file'] ?? null;
 

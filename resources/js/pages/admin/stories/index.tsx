@@ -113,6 +113,7 @@ export default function StoriesIndex({
 
     const [activeTab, setActiveTab] = useState<'management' | 'matrix'>('management');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const [selectedFase, setSelectedFase] = useState<string>('all');
     const [expandedStoryScenes, setExpandedStoryScenes] = useState<Record<number, boolean>>({});
 
     // Modal States
@@ -589,43 +590,47 @@ export default function StoriesIndex({
 
     // Filter Stories
     const filteredStories = stories.filter(st => {
-        if (selectedCategory === 'all') return true;
-        return st.category === selectedCategory;
+        const matchCategory = selectedCategory === 'all' || st.category === selectedCategory;
+        const matchFase = selectedFase === 'all' || st.fase === selectedFase;
+        return matchCategory && matchFase;
     });
 
     const categories = ['all', ...Array.from(new Set(stories.map(s => s.category)))];
+    const availableFases = ['all', 'Fase A', 'Fase B1', 'Fase B2'];
 
     return (
         <AdminLayout
             title="Katalog & Manajemen Cerita"
             subtitle="Pusat kelola cover gambar, paket ZIP offline, video mute MP4, audio WAV, dan naskah cerita Gorontalo"
             actions={
-                <div className="flex items-center gap-2.5">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     <button
                         onClick={() => setImportJsonModalOpen(true)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+                        className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
                         title="Import banyak cerita & adegan sekaligus dari data JSON"
                     >
-                        <FileJson className="w-3.5 h-3.5 text-indigo-600" />
+                        <FileJson className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
                         <span>Import JSON</span>
                     </button>
 
                     <button
                         onClick={handleSyncStorage}
                         disabled={isSyncing}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 shadow-2xs"
+                        className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 shadow-2xs"
                         title="Scan otomatis cover & ZIP yang ada di disk storage"
                     >
-                        <FolderSync className={`w-3.5 h-3.5 text-emerald-700 ${isSyncing ? 'animate-spin' : ''}`} />
-                        <span>{isSyncing ? 'Menyinkronkan...' : 'Sinkronkan Aset Storage'}</span>
+                        <FolderSync className={`w-3.5 h-3.5 text-emerald-700 shrink-0 ${isSyncing ? 'animate-spin' : ''}`} />
+                        <span className="hidden sm:inline">{isSyncing ? 'Menyinkronkan...' : 'Sinkronkan Aset Storage'}</span>
+                        <span className="sm:hidden">{isSyncing ? 'Sync...' : 'Sinkronkan'}</span>
                     </button>
 
                     <button
                         onClick={openCreateStoryModal}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                        className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
                     >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>Tambah Cerita Baru</span>
+                        <Plus className="w-3.5 h-3.5 shrink-0" />
+                        <span className="hidden sm:inline">Tambah Cerita Baru</span>
+                        <span className="sm:hidden">Tambah Cerita</span>
                     </button>
                 </div>
             }
@@ -634,7 +639,7 @@ export default function StoriesIndex({
 
             {/* Flash Message Banner */}
             {flash?.success && (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center justify-between shadow-2xs animate-fade-in">
+                <div className="p-3 sm:p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-center justify-between shadow-2xs animate-fade-in">
                     <div className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                         <span className="font-medium">{flash.success}</span>
@@ -643,67 +648,67 @@ export default function StoriesIndex({
             )}
 
             {/* Storage Health & Overview Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+                <div className="p-3 sm:p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-stone-500">Cerita di Database</span>
+                        <span className="text-[11px] sm:text-xs font-medium text-stone-500">Cerita di Database</span>
                         <div className="p-1.5 rounded-lg bg-orange-50 text-orange-700">
-                            <Film className="w-4 h-4" />
+                            <Film className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                     </div>
-                    <div className="text-2xl font-bold text-stone-900 mt-2">{stories.length}</div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">Katalog aktif di aplikasi</div>
+                    <div className="text-xl sm:text-2xl font-bold text-stone-900 mt-1.5 sm:mt-2">{stories.length}</div>
+                    <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 truncate">Katalog aktif di aplikasi</div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+                <div className="p-3 sm:p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-stone-500">Adegan / Scenes</span>
+                        <span className="text-[11px] sm:text-xs font-medium text-stone-500">Adegan / Scenes</span>
                         <div className="p-1.5 rounded-lg bg-stone-100 text-stone-700">
-                            <Layers className="w-4 h-4" />
+                            <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                     </div>
-                    <div className="text-2xl font-bold text-stone-900 mt-2">
+                    <div className="text-xl sm:text-2xl font-bold text-stone-900 mt-1.5 sm:mt-2">
                         {stories.reduce((acc, s) => acc + (s.scenes?.length || 0), 0)}
                     </div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">Total segmen video & audio</div>
+                    <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 truncate">Total segmen video & audio</div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+                <div className="p-3 sm:p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-stone-500">Cover Fisik Disk</span>
+                        <span className="text-[11px] sm:text-xs font-medium text-stone-500">Cover Fisik Disk</span>
                         <div className="p-1.5 rounded-lg bg-sky-50 text-sky-700">
-                            <ImageIcon className="w-4 h-4" />
+                            <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                     </div>
-                    <div className="text-2xl font-bold text-sky-950 mt-2">
-                        {storageStatus.totalPhysicalCovers} <span className="text-xs font-normal text-stone-400">file</span>
+                    <div className="text-xl sm:text-2xl font-bold text-sky-950 mt-1.5 sm:mt-2">
+                        {storageStatus.totalPhysicalCovers} <span className="text-[10px] sm:text-xs font-normal text-stone-400">file</span>
                     </div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">storage/app/public/covers</div>
+                    <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 truncate">storage/app/public/covers</div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
+                <div className="p-3 sm:p-4 rounded-xl bg-white border border-stone-200/80 shadow-2xs">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-stone-500">Paket ZIP Offline</span>
+                        <span className="text-[11px] sm:text-xs font-medium text-stone-500">Paket ZIP Offline</span>
                         <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700">
-                            <FileArchive className="w-4 h-4" />
+                            <FileArchive className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                     </div>
-                    <div className="text-2xl font-bold text-emerald-950 mt-2">
-                        {storageStatus.totalPhysicalPackages} <span className="text-xs font-normal text-stone-400">paket</span>
+                    <div className="text-xl sm:text-2xl font-bold text-emerald-950 mt-1.5 sm:mt-2">
+                        {storageStatus.totalPhysicalPackages} <span className="text-[10px] sm:text-xs font-normal text-stone-400">paket</span>
                     </div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">storage/app/public/packages</div>
+                    <div className="text-[10px] sm:text-[11px] text-stone-500 mt-0.5 truncate">storage/app/public/packages</div>
                 </div>
             </div>
 
             {/* Quick Helper Notice */}
-            <div className="p-4 rounded-xl bg-gradient-to-r from-orange-50/70 via-stone-50 to-white border border-orange-200/70 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
-                <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-700 shrink-0 mt-0.5">
-                        <Sparkles className="w-4 h-4" />
+            <div className="p-3 sm:p-4 rounded-xl bg-gradient-to-r from-orange-50/70 via-stone-50 to-white border border-orange-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                <div className="flex items-start gap-2.5 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-orange-100 flex items-center justify-center text-orange-700 shrink-0 mt-0.5">
+                        <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <div>
                         <h4 className="text-xs font-bold text-stone-900">Alur Penyimpanan & Pengunduhan Donggo Android</h4>
-                        <p className="text-xs text-stone-600 mt-0.5 leading-relaxed">
+                        <p className="text-[11px] sm:text-xs text-stone-600 mt-0.5 leading-relaxed">
                             Aplikasi Android memuat cover visual secara daring melalui URL publik, lalu mengunduh satu paket ZIP per cerita ke penyimpanan internal HP untuk pemutaran video MP4 mute dan dubbing audio 100% luring (offline).
                         </p>
                     </div>
@@ -711,44 +716,62 @@ export default function StoriesIndex({
             </div>
 
             {/* Main Tabs & Category Filter */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-2">
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => setActiveTab('management')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                            activeTab === 'management'
-                                ? 'bg-stone-900 text-white shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
-                        }`}
-                    >
-                        Katalog & Pengelolaan Media
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('matrix')}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                            activeTab === 'matrix'
-                                ? 'bg-stone-900 text-white shadow-2xs'
-                                : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
-                        }`}
-                    >
-                        Matriks Interaktivitas & Analitik Naskah
-                    </button>
-                </div>
+            <div className="flex flex-col gap-3 border-b border-stone-200 pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                        <button
+                            onClick={() => setActiveTab('management')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
+                                activeTab === 'management'
+                                    ? 'bg-stone-900 text-white shadow-2xs'
+                                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                            }`}
+                        >
+                            Katalog & Media
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('matrix')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
+                                activeTab === 'matrix'
+                                    ? 'bg-stone-900 text-white shadow-2xs'
+                                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                            }`}
+                        >
+                            Matriks Naskah & Adegan
+                        </button>
+                    </div>
 
-                <div className="flex items-center gap-2">
-                    <span className="text-xs text-stone-500 font-medium flex items-center gap-1">
-                        <ListFilter className="w-3.5 h-3.5" /> Kategori:
-                    </span>
-                    <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="px-2.5 py-1 rounded-lg border border-stone-200 text-xs bg-white text-stone-800 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500 cursor-pointer"
-                    >
-                        <option value="all">Semua Kategori ({stories.length})</option>
-                        {categories.filter(c => c !== 'all').map(cat => (
-                            <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                    </select>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-1.5 flex-1 sm:flex-initial min-w-[130px]">
+                            <span className="text-xs text-stone-500 font-medium flex items-center gap-1 shrink-0">
+                                <ListFilter className="w-3.5 h-3.5" /> <span className="hidden sm:inline">Kategori:</span>
+                            </span>
+                            <select
+                                value={selectedCategory}
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                className="w-full sm:w-auto px-2 py-1 rounded-lg border border-stone-200 text-xs bg-white text-stone-800 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500 cursor-pointer"
+                            >
+                                <option value="all">Semua Kategori ({stories.length})</option>
+                                {categories.filter(c => c !== 'all').map(cat => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 flex-1 sm:flex-initial min-w-[100px]">
+                            <span className="text-xs text-stone-500 font-medium shrink-0">Fase:</span>
+                            <select
+                                value={selectedFase}
+                                onChange={(e) => setSelectedFase(e.target.value)}
+                                className="w-full sm:w-auto px-2 py-1 rounded-lg border border-stone-200 text-xs bg-white text-stone-800 font-medium focus:outline-none focus:ring-1 focus:ring-orange-500 cursor-pointer"
+                            >
+                                <option value="all">Semua Fase</option>
+                                <option value="Fase A">Fase A</option>
+                                <option value="Fase B1">Fase B1</option>
+                                <option value="Fase B2">Fase B2</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -789,7 +812,12 @@ export default function StoriesIndex({
                                             <span className="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-xs text-white text-[10px] font-mono font-semibold tracking-wider uppercase">
                                                 {story.story_code}
                                             </span>
-                                            <span className="px-2 py-0.5 rounded-md bg-orange-600/90 backdrop-blur-xs text-white text-[10px] font-semibold">
+                                            <span className={`px-2 py-0.5 rounded-md backdrop-blur-xs text-white text-[10px] font-semibold ${
+                                                story.fase === 'Fase A' ? 'bg-emerald-600/90' :
+                                                story.fase === 'Fase B1' ? 'bg-sky-600/90' :
+                                                story.fase === 'Fase B2' ? 'bg-amber-600/90' :
+                                                'bg-orange-600/90'
+                                            }`}>
                                                 {story.fase}
                                             </span>
                                         </div>
@@ -801,18 +829,18 @@ export default function StoriesIndex({
                                         </div>
 
                                         {/* Cover Status indicator */}
-                                        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px]">
-                                            <span className={`px-2 py-0.5 rounded backdrop-blur-xs font-semibold flex items-center gap-1 ${
+                                        <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px] gap-1.5">
+                                            <span className={`px-2 py-0.5 rounded backdrop-blur-xs font-semibold flex items-center gap-1 max-w-[55%] truncate ${
                                                 hasCover ? 'bg-emerald-950/80 text-emerald-200' : 'bg-rose-950/80 text-rose-200'
                                             }`}>
-                                                {hasCover ? <CheckCircle2 className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-                                                <span>{hasCover ? story.cover_image : 'Cover Hilang'}</span>
+                                                {hasCover ? <CheckCircle2 className="w-3 h-3 shrink-0" /> : <AlertCircle className="w-3 h-3 shrink-0" />}
+                                                <span className="truncate">{hasCover ? story.cover_image : 'Cover Hilang'}</span>
                                             </span>
 
-                                            <span className={`px-2 py-0.5 rounded backdrop-blur-xs font-semibold flex items-center gap-1 ${
+                                            <span className={`px-2 py-0.5 rounded backdrop-blur-xs font-semibold flex items-center gap-1 shrink-0 ${
                                                 hasZip ? 'bg-stone-900/80 text-orange-300 font-mono' : 'bg-amber-950/80 text-amber-200'
                                             }`}>
-                                                <FileArchive className="w-3 h-3" />
+                                                <FileArchive className="w-3 h-3 shrink-0" />
                                                 <span>{hasZip ? story.download_size_formatted : 'No ZIP'}</span>
                                             </span>
                                         </div>
@@ -911,7 +939,12 @@ export default function StoriesIndex({
                                                 <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-stone-100 text-stone-700">
                                                     {story.category}
                                                 </span>
-                                                <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700 border border-orange-200">
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-medium border ${
+                                                    story.fase === 'Fase A' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                                                    story.fase === 'Fase B1' ? 'bg-sky-50 text-sky-700 border-sky-200' :
+                                                    story.fase === 'Fase B2' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                                                    'bg-orange-50 text-orange-700 border-orange-200'
+                                                }`}>
                                                     {story.fase}
                                                 </span>
                                             </div>
@@ -998,15 +1031,15 @@ export default function StoriesIndex({
 
             {/* MODAL 1: TAMBAH & EDIT CERITA */}
             {storyModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-xs animate-fade-in overflow-hidden">
-                    <div className="bg-white rounded-2xl border border-stone-200 max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-6 bg-black/60 backdrop-blur-xs animate-fade-in overflow-hidden">
+                    <div className="bg-white rounded-2xl border border-stone-200 max-w-xl w-full max-h-[94vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
                         {/* Fixed Header */}
-                        <div className="p-5 border-b border-stone-100 flex items-center justify-between shrink-0 bg-white">
+                        <div className="p-4 sm:p-5 border-b border-stone-100 flex items-center justify-between shrink-0 bg-white">
                             <div>
-                                <h3 className="font-bold text-base text-stone-900">
+                                <h3 className="font-bold text-sm sm:text-base text-stone-900">
                                     {editingStory ? 'Edit Cerita & Kelola Media' : 'Tambah Cerita Rakyat Baru'}
                                 </h3>
-                                <p className="text-xs text-stone-500 mt-0.5">
+                                <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5">
                                     Unggah cover gambar (.jpeg, .png) dan paket ZIP naskah animasi
                                 </p>
                             </div>
@@ -1021,7 +1054,7 @@ export default function StoriesIndex({
                         {/* Form with Scrollable Body & Fixed Footer */}
                         <form onSubmit={handleStorySubmit} className="flex flex-col flex-1 overflow-hidden min-h-0">
                             {/* Scrollable Body Only */}
-                            <div className="p-5 overflow-y-auto flex-1 space-y-4">
+                            <div className="p-4 sm:p-5 overflow-y-auto flex-1 space-y-4">
                             {/* Judul & Kode Cerita */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div className="sm:col-span-2 space-y-1">
@@ -1081,9 +1114,8 @@ export default function StoriesIndex({
                                         className="w-full px-3 py-2 rounded-lg border border-stone-200 text-xs focus:ring-1 focus:ring-orange-500 focus:outline-none bg-white cursor-pointer"
                                     >
                                         <option value="Fase A">Fase A (Kelas 1 - 2 SD)</option>
-                                        <option value="Fase B">Fase B (Kelas 3 - 4 SD)</option>
-                                        <option value="Fase C">Fase C (Kelas 5 - 6 SD)</option>
-                                        <option value="Fase D">Fase D (SMP)</option>
+                                        <option value="Fase B1">Fase B1 (Kelas 3 SD)</option>
+                                        <option value="Fase B2">Fase B2 (Kelas 4 SD)</option>
                                     </select>
                                 </div>
                             </div>
@@ -1264,28 +1296,37 @@ export default function StoriesIndex({
 
             {/* MODAL 2: KELOLA ADEGAN (SCENES) & NASKAH */}
             {scenesModalOpen && activeStoryForScenes && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in overflow-hidden">
-                    <div className="bg-white rounded-2xl border border-stone-200 max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in overflow-hidden">
+                    <div className="bg-white rounded-2xl border border-stone-200 max-w-3xl w-full max-h-[94vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden my-auto">
                         {/* Fixed Header */}
-                        <div className="p-5 border-b border-stone-100 flex items-center justify-between shrink-0 bg-white">
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <h3 className="font-bold text-base text-stone-900">
-                                        Kelola Adegan: {activeStoryForScenes.title}
-                                    </h3>
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-stone-100 text-stone-700">
-                                        {activeStoryForScenes.story_code}
-                                    </span>
+                        <div className="p-4 sm:p-5 border-b border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 bg-white">
+                            <div className="flex items-start justify-between sm:block">
+                                <div>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <h3 className="font-bold text-sm sm:text-base text-stone-900">
+                                            Kelola Adegan: {activeStoryForScenes.title}
+                                        </h3>
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-stone-100 text-stone-700">
+                                            {activeStoryForScenes.story_code}
+                                        </span>
+                                    </div>
+                                    <p className="text-[11px] sm:text-xs text-stone-500 mt-0.5">
+                                        Daftar file video MP4 mute, audio WAV asli, dialog, dan linimasa subtitle
+                                    </p>
                                 </div>
-                                <p className="text-xs text-stone-500 mt-0.5">
-                                    Daftar file video MP4 mute, file audio WAV asli, dialog karakter, dan linimasa subtitle
-                                </p>
+
+                                <button
+                                    onClick={() => setScenesModalOpen(false)}
+                                    className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 cursor-pointer sm:hidden"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
                             </div>
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center justify-between sm:justify-end gap-2">
                                 <button
                                     onClick={() => openCreateSceneModal(activeStoryForScenes)}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs flex-1 sm:flex-initial"
                                 >
                                     <Plus className="w-3.5 h-3.5" />
                                     <span>Tambah Adegan</span>
@@ -1293,7 +1334,7 @@ export default function StoriesIndex({
 
                                 <button
                                     onClick={() => setScenesModalOpen(false)}
-                                    className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 cursor-pointer"
+                                    className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 cursor-pointer hidden sm:block"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
@@ -1301,7 +1342,7 @@ export default function StoriesIndex({
                         </div>
 
                         {/* Scenes List (Scrollable Body Only) */}
-                        <div className="flex-1 overflow-y-auto p-5 space-y-3">
+                        <div className="flex-1 overflow-y-auto p-3.5 sm:p-5 space-y-3">
                             {(activeStoryForScenes.scenes && activeStoryForScenes.scenes.length > 0) ? (
                                 activeStoryForScenes.scenes.map((scene) => (
                                     <div
@@ -1551,46 +1592,57 @@ export default function StoriesIndex({
                                                 key={dlg.id || idx}
                                                 className="p-2.5 rounded-lg bg-white border border-stone-200 flex flex-col sm:flex-row sm:items-center gap-2 text-xs"
                                             >
-                                                <div className="flex items-center gap-1 shrink-0 font-mono text-[11px]">
-                                                    <input
-                                                        type="number"
-                                                        value={dlg.startTimeMs}
-                                                        onChange={(e) => updateDialogueRow(idx, 'startTimeMs', parseInt(e.target.value) || 0)}
-                                                        placeholder="Mulai (ms)"
-                                                        className="w-20 px-1.5 py-1 rounded border border-stone-200"
-                                                        title="Waktu mulai (ms)"
-                                                    />
-                                                    <span className="text-stone-400">-</span>
-                                                    <input
-                                                        type="number"
-                                                        value={dlg.endTimeMs}
-                                                        onChange={(e) => updateDialogueRow(idx, 'endTimeMs', parseInt(e.target.value) || 0)}
-                                                        placeholder="Selesai (ms)"
-                                                        className="w-20 px-1.5 py-1 rounded border border-stone-200"
-                                                        title="Waktu selesai (ms)"
-                                                    />
-                                                </div>
+                                                <div className="flex items-center justify-between gap-2 sm:justify-start">
+                                                    <div className="flex items-center gap-1 font-mono text-[11px]">
+                                                        <input
+                                                            type="number"
+                                                            value={dlg.startTimeMs}
+                                                            onChange={(e) => updateDialogueRow(idx, 'startTimeMs', parseInt(e.target.value) || 0)}
+                                                            placeholder="Mulai"
+                                                            className="w-18 sm:w-20 px-1.5 py-1 rounded border border-stone-200"
+                                                            title="Waktu mulai (ms)"
+                                                        />
+                                                        <span className="text-stone-400">-</span>
+                                                        <input
+                                                            type="number"
+                                                            value={dlg.endTimeMs}
+                                                            onChange={(e) => updateDialogueRow(idx, 'endTimeMs', parseInt(e.target.value) || 0)}
+                                                            placeholder="Selesai"
+                                                            className="w-18 sm:w-20 px-1.5 py-1 rounded border border-stone-200"
+                                                            title="Waktu selesai (ms)"
+                                                        />
+                                                    </div>
 
-                                                <input
-                                                    type="text"
-                                                    value={dlg.character}
-                                                    onChange={(e) => updateDialogueRow(idx, 'character', e.target.value)}
-                                                    placeholder="Tokoh"
-                                                    className="w-28 px-2 py-1 rounded border border-stone-200 shrink-0 text-xs"
-                                                />
+                                                    <input
+                                                        type="text"
+                                                        value={dlg.character}
+                                                        onChange={(e) => updateDialogueRow(idx, 'character', e.target.value)}
+                                                        placeholder="Tokoh"
+                                                        className="w-24 sm:w-28 px-2 py-1 rounded border border-stone-200 text-xs"
+                                                    />
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeDialogueRow(idx)}
+                                                        className="p-1 rounded text-stone-400 hover:text-rose-600 cursor-pointer sm:hidden"
+                                                        title="Hapus baris"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                </div>
 
                                                 <input
                                                     type="text"
                                                     value={dlg.text}
                                                     onChange={(e) => updateDialogueRow(idx, 'text', e.target.value)}
                                                     placeholder="Teks dialog yang diucapkan..."
-                                                    className="flex-1 px-2 py-1 rounded border border-stone-200 text-xs"
+                                                    className="flex-1 w-full px-2 py-1 rounded border border-stone-200 text-xs"
                                                 />
 
                                                 <button
                                                     type="button"
                                                     onClick={() => removeDialogueRow(idx)}
-                                                    className="p-1 rounded text-stone-400 hover:text-rose-600 cursor-pointer shrink-0"
+                                                    className="p-1 rounded text-stone-400 hover:text-rose-600 cursor-pointer shrink-0 hidden sm:block"
                                                     title="Hapus baris"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />

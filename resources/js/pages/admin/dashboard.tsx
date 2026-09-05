@@ -101,10 +101,10 @@ export default function Dashboard({
             title="Ringkasan Analitik & Monitoring"
             subtitle="Data telemetri pemutaran video, frekuensi dubbing suara, dan profil pengguna"
             actions={
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                     <button
                         onClick={togglePolling}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
                             isPollingActive
                                 ? 'bg-stone-100 border-stone-300 text-stone-800'
                                 : 'bg-white border-stone-200 text-stone-500 hover:bg-stone-50'
@@ -112,32 +112,32 @@ export default function Dashboard({
                     >
                         {isPollingActive ? (
                             <>
-                                <PauseCircle className="w-3.5 h-3.5 text-stone-600" />
-                                <span>Auto-Sync Aktif</span>
+                                <PauseCircle className="w-3.5 h-3.5 text-stone-600 shrink-0" />
+                                <span>Auto-Sync</span>
                             </>
                         ) : (
                             <>
-                                <PlayCircle className="w-3.5 h-3.5 text-stone-400" />
-                                <span>Auto-Sync Dijeda</span>
+                                <PlayCircle className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                                <span>Sync Jeda</span>
                             </>
                         )}
                     </button>
 
                     <button
                         onClick={() => setIsResetModalOpen(true)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium text-xs border border-stone-300 transition-colors shadow-2xs cursor-pointer"
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium text-xs border border-stone-300 transition-colors shadow-2xs cursor-pointer"
                         title="Opsi Reset Database"
                     >
-                        <RotateCcw className="w-3.5 h-3.5 text-stone-600" />
+                        <RotateCcw className="w-3.5 h-3.5 text-stone-600 shrink-0" />
                         <span>Reset Data</span>
                     </button>
 
                     <a
                         href="/admin/export/users"
                         download
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs transition-colors shadow-2xs"
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium text-xs transition-colors shadow-2xs"
                     >
-                        <Download className="w-3.5 h-3.5" />
+                        <Download className="w-3.5 h-3.5 shrink-0" />
                         <span>Ekspor Laporan</span>
                     </a>
                 </div>
@@ -170,9 +170,9 @@ export default function Dashboard({
             />
 
             {/* 1. Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {/* Total Learners */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-2.5 sm:space-y-3">
                     <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Total Siswa</span>
                         <div className="w-7 h-7 rounded-md bg-stone-100 flex items-center justify-center text-stone-600">
@@ -180,7 +180,7 @@ export default function Dashboard({
                         </div>
                     </div>
                     <div>
-                        <div className="text-3xl font-bold text-stone-900 tracking-tight">{stats.total_users}</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">{stats.total_users}</div>
                         <div className="text-xs text-stone-500 mt-0.5">Pengguna terdaftar di aplikasi</div>
                     </div>
                     <Link
@@ -193,7 +193,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Total Video Plays */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-2.5 sm:space-y-3">
                     <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Pemutaran Video</span>
                         <div className="w-7 h-7 rounded-md bg-stone-100 flex items-center justify-center text-stone-600">
@@ -201,7 +201,7 @@ export default function Dashboard({
                         </div>
                     </div>
                     <div>
-                        <div className="text-3xl font-bold text-stone-900 tracking-tight">{stats.total_video_plays}</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">{stats.total_video_plays}</div>
                         <div className="text-xs text-stone-500 mt-0.5">Total play per scene animasi</div>
                     </div>
                     <Link
@@ -214,7 +214,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Total Voice Replacements */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-2.5 sm:space-y-3 sm:col-span-2 lg:col-span-1">
                     <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Sesi Dubbing</span>
                         <div className="w-7 h-7 rounded-md bg-stone-100 flex items-center justify-center text-stone-600">
@@ -222,7 +222,7 @@ export default function Dashboard({
                         </div>
                     </div>
                     <div>
-                        <div className="text-3xl font-bold text-stone-900 tracking-tight">{stats.total_voice_replacements}</div>
+                        <div className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">{stats.total_voice_replacements}</div>
                         <div className="text-xs text-stone-500 mt-0.5">Pergantian suara karakter</div>
                     </div>
                     <Link
@@ -236,16 +236,16 @@ export default function Dashboard({
             </div>
 
             {/* 2. Chart & Recent Feed */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
                 {/* 7-Day Chart */}
-                <div className="lg:col-span-8 p-6 rounded-xl bg-white border border-stone-200 shadow-2xs flex flex-col justify-between">
+                <div className="lg:col-span-8 p-4 sm:p-6 rounded-xl bg-white border border-stone-200 shadow-2xs flex flex-col justify-between overflow-hidden">
                     <div>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 sm:mb-6">
                             <div>
                                 <h3 className="font-bold text-sm text-stone-900">Aktivitas 7 Hari Terakhir</h3>
-                                <p className="text-xs text-stone-500">Perbandingan jumlah video diputar dan pergantian suara dubbing</p>
+                                <p className="text-[11px] sm:text-xs text-stone-500">Perbandingan jumlah video diputar dan pergantian suara dubbing</p>
                             </div>
-                            <div className="flex items-center gap-4 text-xs font-medium text-stone-600">
+                            <div className="flex items-center gap-3 sm:gap-4 text-xs font-medium text-stone-600">
                                 <div className="flex items-center gap-1.5">
                                     <span className="w-2.5 h-2.5 rounded-sm bg-orange-600"></span>
                                     <span>Play Video</span>
@@ -257,44 +257,52 @@ export default function Dashboard({
                             </div>
                         </div>
 
-                        {/* Bar chart */}
-                        <div className="h-48 flex items-end justify-between gap-3 border-b border-stone-100 pb-2">
-                            {chart_days.map((day, idx) => {
-                                const playHeight = Math.max(8, Math.round((day.plays / maxChartValue) * 140));
-                                const voiceHeight = Math.max(8, Math.round((day.voices / maxChartValue) * 140));
+                        {/* Bar chart with overflow scroll safety */}
+                        <div className="overflow-x-auto pb-2 -mx-1 px-1 scrollbar-none">
+                            <div className="h-44 sm:h-48 min-w-[280px] flex items-end justify-between gap-1.5 sm:gap-3 border-b border-stone-100 pb-2">
+                                {chart_days.map((day, idx) => {
+                                    const playHeight = Math.max(8, Math.round((day.plays / maxChartValue) * 130));
+                                    const voiceHeight = Math.max(8, Math.round((day.voices / maxChartValue) * 130));
 
-                                return (
-                                    <div key={idx} className="flex-1 flex flex-col items-center gap-2">
-                                        <div className="w-full flex items-end justify-center gap-1 h-36">
-                                            {/* Play bar */}
-                                            <div
-                                                style={{ height: `${playHeight}px` }}
-                                                className="w-full max-w-[14px] bg-orange-600 rounded-t-xs"
-                                                title={`${day.date}: ${day.plays} Play`}
-                                            />
-                                            {/* Voice bar */}
-                                            <div
-                                                style={{ height: `${voiceHeight}px` }}
-                                                className="w-full max-w-[14px] bg-stone-700 rounded-t-xs"
-                                                title={`${day.date}: ${day.voices} Dubbing`}
-                                            />
+                                    // Format DD/MM for clean mobile display
+                                    const dateParts = day.date.split('-');
+                                    const formattedDate = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}` : day.date;
+
+                                    return (
+                                        <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 sm:gap-2">
+                                            <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-32 sm:h-36">
+                                                {/* Play bar */}
+                                                <div
+                                                    style={{ height: `${playHeight}px` }}
+                                                    className="w-full max-w-[12px] sm:max-w-[14px] bg-orange-600 rounded-t-xs transition-all duration-300"
+                                                    title={`${day.date}: ${day.plays} Play`}
+                                                />
+                                                {/* Voice bar */}
+                                                <div
+                                                    style={{ height: `${voiceHeight}px` }}
+                                                    className="w-full max-w-[12px] sm:max-w-[14px] bg-stone-700 rounded-t-xs transition-all duration-300"
+                                                    title={`${day.date}: ${day.voices} Dubbing`}
+                                                />
+                                            </div>
+                                            <span className="text-[9px] sm:text-[10px] font-medium text-stone-500 font-mono" title={day.date}>
+                                                {formattedDate}
+                                            </span>
                                         </div>
-                                        <span className="text-[10px] font-medium text-stone-500">{day.date}</span>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 pt-2 flex items-center justify-between text-xs text-stone-500">
+                    <div className="mt-3 sm:mt-4 pt-2 flex items-center justify-between text-[11px] sm:text-xs text-stone-500">
                         <span>Sinkronisasi otomatis setiap 6 detik</span>
-                        <span className="font-mono text-[11px]">REST API v1</span>
+                        <span className="font-mono text-[10px] sm:text-[11px]">REST API v1</span>
                     </div>
                 </div>
 
                 {/* Recent Feed */}
-                <div className="lg:col-span-4 p-6 rounded-xl bg-white border border-stone-200 shadow-2xs flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
+                <div className="lg:col-span-4 p-4 sm:p-6 rounded-xl bg-white border border-stone-200 shadow-2xs flex flex-col">
+                    <div className="flex items-center justify-between mb-3 sm:mb-4">
                         <h3 className="font-bold text-sm text-stone-900">Aktivitas Terkini</h3>
                         <Link href="/admin/logs" className="text-xs font-semibold text-orange-700 hover:underline">
                             Semua
@@ -343,9 +351,9 @@ export default function Dashboard({
             </div>
 
             {/* 3. Breakdown Matrix Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-6">
                 {/* Top Stories */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
                     <h3 className="font-bold text-xs uppercase tracking-wider text-stone-500">
                         Cerita Paling Banyak Diputar
                     </h3>
@@ -366,7 +374,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Top Dubbed */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
                     <h3 className="font-bold text-xs uppercase tracking-wider text-stone-500">
                         Scene Paling Sering Didubbing
                     </h3>
@@ -390,7 +398,7 @@ export default function Dashboard({
                 </div>
 
                 {/* Demographics */}
-                <div className="p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
+                <div className="p-4 sm:p-5 rounded-xl bg-white border border-stone-200 shadow-2xs space-y-3">
                     <h3 className="font-bold text-xs uppercase tracking-wider text-stone-500">
                         Distribusi Bahasa Gorontalo
                     </h3>

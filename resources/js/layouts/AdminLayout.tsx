@@ -80,15 +80,24 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
                 </button>
             </div>
 
+            {/* Backdrop for Mobile Sidebar */}
+            {mobileNavOpen && (
+                <div
+                    className="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-40 md:hidden transition-opacity"
+                    onClick={() => setMobileNavOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
+
             {/* Sidebar */}
             <aside
-                className={`fixed md:sticky top-0 left-0 h-screen w-60 bg-white border-r border-stone-200 flex flex-col z-40 transition-transform duration-200 md:translate-x-0 ${
-                    mobileNavOpen ? 'translate-x-0' : '-translate-x-full'
+                className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-white border-r border-stone-200 flex flex-col z-50 md:z-40 transition-transform duration-200 md:translate-x-0 ${
+                    mobileNavOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
                 }`}
             >
                 {/* Brand Header */}
                 <div className="p-4 border-b border-stone-100 flex items-center justify-between">
-                    <Link href="/admin/dashboard" className="flex items-center gap-2.5">
+                    <Link href="/admin/dashboard" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center font-bold text-white text-sm shadow-xs">
                             D
                         </div>
@@ -99,6 +108,13 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
                             <p className="text-[11px] text-stone-500 font-medium">Monitoring System</p>
                         </div>
                     </Link>
+                    <button
+                        onClick={() => setMobileNavOpen(false)}
+                        className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 md:hidden cursor-pointer"
+                        title="Tutup Menu"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
                 </div>
 
                 {/* Nav Links */}
@@ -192,19 +208,19 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
             {/* Main Content Area */}
             <main className="flex-1 min-w-0 flex flex-col bg-[#fafaf9]">
                 {/* Topbar */}
-                <header className="px-6 py-3.5 border-b border-stone-200/80 bg-white sticky top-0 z-30 flex items-center justify-between">
-                    <div>
+                <header className="px-4 sm:px-6 py-3 sm:py-3.5 border-b border-stone-200/80 bg-white sticky top-0 z-30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+                    <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-1.5 text-[11px] text-stone-500">
                             <Link href="/admin/dashboard" className="hover:text-stone-900">Admin</Link>
-                            <ChevronRight className="w-3 h-3 text-stone-400" />
-                            <span className="text-stone-800 font-semibold">{title || 'Monitoring'}</span>
+                            <ChevronRight className="w-3 h-3 text-stone-400 shrink-0" />
+                            <span className="text-stone-800 font-semibold truncate">{title || 'Monitoring'}</span>
                         </div>
-                        {title && <h1 className="text-lg font-bold text-stone-900 tracking-tight mt-0.5">{title}</h1>}
-                        {subtitle && <p className="text-xs text-stone-500">{subtitle}</p>}
+                        {title && <h1 className="text-base sm:text-lg font-bold text-stone-900 tracking-tight mt-0.5 truncate">{title}</h1>}
+                        {subtitle && <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-1 sm:line-clamp-none mt-0.5">{subtitle}</p>}
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
+                        <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                             <span>API Sinkronisasi Aktif</span>
                         </div>
@@ -213,7 +229,7 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
                 </header>
 
                 {/* Page Content */}
-                <div className="p-6 max-w-7xl w-full mx-auto space-y-6 flex-1">
+                <div className="p-3.5 sm:p-6 max-w-7xl w-full mx-auto space-y-4 sm:space-y-6 flex-1 min-w-0">
                     {children}
                 </div>
             </main>
