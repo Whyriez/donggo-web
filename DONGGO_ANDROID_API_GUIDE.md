@@ -130,29 +130,55 @@ data class BatchSyncResponse(
 )
 
 // ==========================================
-// 6. Katalog Cerita & Scene
+// 6. Katalog Cerita, Scene & Dialog
 // ==========================================
 data class Story(
     @SerializedName("id") val id: Int,
+    @SerializedName("storyId") val storyId: String = "story_$id",
     @SerializedName("slug") val slug: String,
     @SerializedName("title") val title: String,
-    @SerializedName("description") val description: String?,
-    @SerializedName("category") val category: String?,
-    @SerializedName("thumbnail") val thumbnail: String?,
-    @SerializedName("total_scenes") val totalScenes: Int,
+    @SerializedName("fase") val fase: String? = "Fase A",
+    @SerializedName("category") val category: String? = null,
+    @SerializedName("description") val description: String? = null,
+    @SerializedName("coverImage") val coverImage: String? = null,
+    @SerializedName("cover_url") val coverUrl: String? = null,
+    @SerializedName("backsoundFile") val backsoundFile: String? = null,
+    @SerializedName("downloadPackageUrl") val downloadPackageUrl: String? = null,
+    @SerializedName("downloadSizeBytes") val downloadSizeBytes: Long? = null,
+    @SerializedName("downloadSizeFormatted") val downloadSizeFormatted: String? = null,
+    @SerializedName("totalScenes") val totalScenes: Int = 0,
     @SerializedName("scenes") val scenes: List<Scene> = emptyList()
 )
 
 data class Scene(
     @SerializedName("id") val id: Int,
-    @SerializedName("story_id") val storyId: Int,
-    @SerializedName("scene_number") val sceneNumber: Int,
+    @SerializedName("sceneNumber") val sceneNumber: Int,
     @SerializedName("title") val title: String,
-    @SerializedName("video_asset") val videoAsset: String?,
-    @SerializedName("character_name") val characterName: String?,
-    @SerializedName("gorontalo_script") val gorontaloScript: String?,
-    @SerializedName("indonesian_translation") val indonesianTranslation: String?
+    @SerializedName("videoMuteFile") val videoMuteFile: String?,
+    @SerializedName("audioOriginalFile") val audioOriginalFile: String?,
+    @SerializedName("characterName") val characterName: String?,
+    @SerializedName("gorontaloScript") val gorontaloScript: String?,
+    @SerializedName("indonesianTranslation") val indonesianTranslation: String?,
+    @SerializedName("dialogues") val dialogues: List<Dialogue> = emptyList()
 )
+
+data class Dialogue(
+    @SerializedName("id") val id: Int,
+    @SerializedName("startTimeMs") val startTimeMs: Long,
+    @SerializedName("endTimeMs") val endTimeMs: Long,
+    @SerializedName("text") val text: String,
+    @SerializedName("character") val character: String
+)
+
+// ==========================================
+// 7. Status Download Cerita (UI State)
+// ==========================================
+sealed class StoryDownloadState {
+    object NotDownloaded : StoryDownloadState()
+    data class Downloading(val progress: Int) : StoryDownloadState()
+    object Downloaded : StoryDownloadState()
+    data class Error(val message: String) : StoryDownloadState()
+}
 ```
 
 ---
@@ -579,9 +605,9 @@ class DonggoMonitoringRepository(private val context: Context) {
 
 ---
 
-### 5. Mengambil Katalog Cerita & Adegan
+### 5. Mengambil Katalog Cerita, Adegan & Paket Download
 
-- **Endpoint**: `GET /api/v1/stories`
+- **Endpoint**: `GET /api/v1/stories` (atau `/api/v1/monitoring/stories`)
 - **Header**:
     - `X-API-KEY: donggo_secret_key_2026_xyz`
     - `Accept: application/json`
@@ -593,22 +619,45 @@ class DonggoMonitoringRepository(private val context: Context) {
     "data": [
         {
             "id": 1,
-            "slug": "legenda-lahilote",
-            "title": "Legenda Lahilote (Batu Pohe)",
-            "description": "Kisah heroik Lahilote yang bertemu dengan bidadari kahyangan...",
+            "storyId": "story_1",
+            "slug": "hemolapula-lo-putito",
+            "title": "Hemolapula lo Putito",
+            "fase": "Fase A",
             "category": "Cerita Rakyat Gorontalo",
-            "thumbnail": "/images/lahilote.jpg",
-            "total_scenes": 3,
+            "description": "Kisah persahabatan dan kecerdikan kancil dan kera...",
+            "coverImage": "cover_hemolapula_lo_putito.jpg",
+            "cover_url": "http://10.0.2.2:8000/storage/covers/cover_hemolapula_lo_putito.jpg",
+            "backsoundFile": "backsound_story_1.mp3",
+            "downloadPackageUrl": "http://10.0.2.2:8000/storage/packages/story_1.zip",
+            "downloadSizeBytes": 15728640,
+            "downloadSizeFormatted": "15 MB",
+            "totalScenes": 2,
             "scenes": [
                 {
                     "id": 1,
-                    "story_id": 1,
-                    "scene_number": 1,
-                    "title": "Scene 1: Pertemuan di Mata Air Hulu Sungai",
-                    "video_asset": "lahilote_scene_1.mp4",
-                    "character_name": "Lahilote",
-                    "gorontalo_script": "Oliyo ta mohelato, wau yilowali mota to hungayo.",
-                    "indonesian_translation": "Dia sangat rupawan dan anggun, aku terpesona di tepi sungai."
+                    "sceneNumber": 1,
+                    "title": "Scene 1: Pertemuan di Pinggir Hutan",
+                    "videoMuteFile": "story_1_scene_1_video_mute.mp4",
+                    "audioOriginalFile": "story_1_scene_1_audio.wav",
+                    "characterName": "Narator",
+                    "gorontaloScript": "Te Deka to o'ayuwa.",
+                    "indonesianTranslation": "Kancil berada di pinggir hutan lebat.",
+                    "dialogues": [
+                        {
+                            "id": 1,
+                            "startTimeMs": 2126,
+                            "endTimeMs": 3228,
+                            "text": "Te Deka",
+                            "character": "Narator"
+                        },
+                        {
+                            "id": 2,
+                            "startTimeMs": 3500,
+                            "endTimeMs": 5200,
+                            "text": "Tidola to hungayo",
+                            "character": "Putito"
+                        }
+                    ]
                 }
             ]
         }
@@ -649,3 +698,308 @@ class StoryPlayerViewModel(
     }
 }
 ```
+
+---
+
+## 7. Panduan Lengkap Download Story On-Demand & Offline Playback (Kotlin)
+
+> **Konsep Dasar**:
+> 1. Aplikasi Android awal berukuran kecil karena video/audio tidak dimasukkan ke dalam APK (`res/raw`).
+> 2. Cerita diunduh **per cerita (On-Demand)** dalam format paket `.zip` langsung dari server.
+> 3. Progress unduhan (0% – 100%) dihitung oleh Android secara real-time dari stream byte HTTP (`Content-Length`).
+> 4. Setelah selesai diunduh & diekstrak ke penyimpanan internal (`context.filesDir/stories/{storyId}/`), cerita bisa dimainkan **100% Offline** tanpa kuota internet!
+
+### A. StoryDownloadManager.kt (`com.donggo.app.data.downloader`)
+
+Salin helper berikut ke dalam project Android Studio Anda:
+
+```kotlin
+package com.donggo.app.data.downloader
+
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.concurrent.TimeUnit
+import java.util.zip.ZipInputStream
+
+class StoryDownloadManager(private val context: Context) {
+
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
+        .build()
+
+    /**
+     * Cek apakah cerita sudah pernah diunduh dan tersimpan di memori HP.
+     */
+    fun isStoryDownloaded(storyId: String): Boolean {
+        val storyFolder = File(context.filesDir, "stories/$storyId")
+        return storyFolder.exists() && (storyFolder.listFiles()?.isNotEmpty() == true)
+    }
+
+    /**
+     * Dapatkan file video lokal yang telah diunduh.
+     */
+    fun getSceneVideoFile(storyId: String, videoFileName: String): File {
+        return File(context.filesDir, "stories/$storyId/$videoFileName")
+    }
+
+    /**
+     * Dapatkan file audio asli lokal yang telah diunduh.
+     */
+    fun getSceneAudioFile(storyId: String, audioFileName: String): File {
+        return File(context.filesDir, "stories/$storyId/$audioFileName")
+    }
+
+    /**
+     * Dapatkan file backsound lokal yang telah diunduh.
+     */
+    fun getBacksoundFile(storyId: String, backsoundFileName: String): File {
+        return File(context.filesDir, "stories/$storyId/$backsoundFileName")
+    }
+
+    /**
+     * Download paket ZIP cerita dari server dengan real-time progress callback.
+     * @param storyId ID unik cerita (contoh: "story_1")
+     * @param downloadUrl URL file zip dari server (contoh: "http://.../storage/packages/story_1.zip")
+     * @param onProgress Callback untuk memperbarui persentase (0 hingga 100) di UI
+     */
+    suspend fun downloadStory(
+        storyId: String,
+        downloadUrl: String,
+        onProgress: (percent: Int) -> Unit
+    ): Result<File> = withContext(Dispatchers.IO) {
+        try {
+            val request = Request.Builder().url(downloadUrl).build()
+            val response = client.newCall(request).execute()
+
+            if (!response.isSuccessful) {
+                return@withContext Result.failure(IOException("Server error: HTTP ${response.code}"))
+            }
+
+            val body = response.body ?: return@withContext Result.failure(IOException("Empty response body"))
+            val totalBytes = body.contentLength()
+            var downloadedBytes = 0L
+
+            // 1. Tulis ke file cache temporer .zip
+            val tempZipFile = File(context.cacheDir, "$storyId.zip")
+            val buffer = ByteArray(8 * 1024)
+
+            body.byteStream().use { inputStream ->
+                FileOutputStream(tempZipFile).use { outputStream ->
+                    var bytesRead: Int
+                    var lastReportedProgress = -1
+
+                    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                        outputStream.write(buffer, 0, bytesRead)
+                        downloadedBytes += bytesRead
+
+                        if (totalBytes > 0) {
+                            val progress = ((downloadedBytes * 100) / totalBytes).toInt().coerceIn(0, 100)
+                            if (progress != lastReportedProgress) {
+                                lastReportedProgress = progress
+                                withContext(Dispatchers.Main) {
+                                    onProgress(progress)
+                                }
+                            }
+                        }
+                    }
+                    outputStream.flush()
+                }
+            }
+
+            // 2. Ekstrak isi ZIP ke direktori permanen internal: context.filesDir/stories/{storyId}/
+            val targetDir = File(context.filesDir, "stories/$storyId").apply { mkdirs() }
+            unzipArchive(tempZipFile, targetDir)
+
+            // 3. Hapus file zip sementara untuk menghemat memori HP
+            tempZipFile.delete()
+
+            withContext(Dispatchers.Main) {
+                onProgress(100)
+            }
+
+            Result.success(targetDir)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * Hapus cerita dari penyimpanan lokal HP jika pengguna ingin menghemat memori.
+     */
+    fun deleteStory(storyId: String): Boolean {
+        val storyFolder = File(context.filesDir, "stories/$storyId")
+        return if (storyFolder.exists()) {
+            storyFolder.deleteRecursively()
+        } else {
+            true
+        }
+    }
+
+    private fun unzipArchive(zipFile: File, targetDirectory: File) {
+        ZipInputStream(BufferedInputStream(FileInputStream(zipFile))).use { zis ->
+            var entry = zis.nextEntry
+            val buffer = ByteArray(8 * 1024)
+            while (entry != null) {
+                val newFile = File(targetDirectory, entry.name)
+                if (entry.isDirectory) {
+                    newFile.mkdirs()
+                } else {
+                    newFile.parentFile?.mkdirs()
+                    FileOutputStream(newFile).use { fos ->
+                        var count: Int
+                        while (zis.read(buffer).also { count = it } != -1) {
+                            fos.write(buffer, 0, count)
+                        }
+                    }
+                }
+                zis.closeEntry()
+                entry = zis.nextEntry
+            }
+        }
+    }
+}
+```
+
+---
+
+### B. StoryCatalogViewModel.kt (State Management Download di UI)
+
+```kotlin
+package com.donggo.app.ui.catalog
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.donggo.app.data.downloader.StoryDownloadManager
+import com.donggo.app.data.model.Story
+import com.donggo.app.data.model.StoryDownloadState
+import com.donggo.app.data.network.ApiClient
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class StoryCatalogViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val downloadManager = StoryDownloadManager(application)
+
+    private val _stories = MutableStateFlow<List<Story>>(emptyList())
+    val stories: StateFlow<List<Story>> = _stories.asStateFlow()
+
+    // Map ID Cerita -> Status Download (NotDownloaded, Downloading(45%), Downloaded)
+    private val _downloadStates = MutableStateFlow<Map<String, StoryDownloadState>>(emptyMap())
+    val downloadStates: StateFlow<Map<String, StoryDownloadState>> = _downloadStates.asStateFlow()
+
+    fun loadStories() {
+        viewModelScope.launch {
+            try {
+                val response = ApiClient.apiService.getStories()
+                if (response.isSuccessful) {
+                    val list = response.body()?.data ?: emptyList()
+                    _stories.value = list
+
+                    // Periksa status lokal masing-masing cerita
+                    val initialStates = mutableMapOf<String, StoryDownloadState>()
+                    list.forEach { story ->
+                        val isDownloaded = downloadManager.isStoryDownloaded(story.storyId)
+                        initialStates[story.storyId] = if (isDownloaded) {
+                            StoryDownloadState.Downloaded
+                        } else {
+                            StoryDownloadState.NotDownloaded
+                        }
+                    }
+                    _downloadStates.value = initialStates
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun downloadStory(story: Story) {
+        val downloadUrl = story.downloadPackageUrl ?: return
+        val storyId = story.storyId
+
+        viewModelScope.launch {
+            _downloadStates.value = _downloadStates.value + (storyId to StoryDownloadState.Downloading(0))
+
+            val result = downloadManager.downloadStory(storyId, downloadUrl) { progress ->
+                _downloadStates.value = _downloadStates.value + (storyId to StoryDownloadState.Downloading(progress))
+            }
+
+            if (result.isSuccess) {
+                _downloadStates.value = _downloadStates.value + (storyId to StoryDownloadState.Downloaded)
+            } else {
+                _downloadStates.value = _downloadStates.value + (
+                    storyId to StoryDownloadState.Error(result.exceptionOrNull()?.message ?: "Gagal mengunduh")
+                )
+            }
+        }
+    }
+
+    fun deleteStory(storyId: String) {
+        downloadManager.deleteStory(storyId)
+        _downloadStates.value = _downloadStates.value + (storyId to StoryDownloadState.NotDownloaded)
+    }
+}
+```
+
+---
+
+### C. Pemutaran Video & Audio 100% Offline (ExoPlayer & MediaPlayer)
+
+Saat cerita berstatus `StoryDownloadState.Downloaded`, putar langsung file dari internal storage:
+
+```kotlin
+// 1. Pemutaran Video Adegan Menggunakan ExoPlayer
+fun playSceneVideoOffline(context: Context, exoPlayer: ExoPlayer, storyId: String, videoFileName: String) {
+    val downloadManager = StoryDownloadManager(context)
+    val videoFile = downloadManager.getSceneVideoFile(storyId, videoFileName)
+
+    if (videoFile.exists()) {
+        val mediaItem = MediaItem.fromUri(Uri.fromFile(videoFile))
+        exoPlayer.setMediaItem(mediaItem)
+        exoPlayer.prepare()
+        exoPlayer.play()
+    } else {
+        Toast.makeText(context, "File video tidak ditemukan secara lokal!", Toast.LENGTH_SHORT).show()
+    }
+}
+
+// 2. Pemutaran Audio Suara Asli Menggunakan MediaPlayer
+fun playSceneAudioOffline(context: Context, mediaPlayer: MediaPlayer, storyId: String, audioFileName: String) {
+    val downloadManager = StoryDownloadManager(context)
+    val audioFile = downloadManager.getSceneAudioFile(storyId, audioFileName)
+
+    if (audioFile.exists()) {
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(audioFile.absolutePath)
+        mediaPlayer.prepare()
+        mediaPlayer.start()
+    }
+}
+
+// 3. Pemutaran Backsound Lagu Cerita Menggunakan MediaPlayer
+fun playBacksoundOffline(context: Context, backsoundPlayer: MediaPlayer, storyId: String, backsoundFileName: String) {
+    val downloadManager = StoryDownloadManager(context)
+    val backsoundFile = downloadManager.getBacksoundFile(storyId, backsoundFileName)
+
+    if (backsoundFile.exists()) {
+        backsoundPlayer.reset()
+        backsoundPlayer.setDataSource(backsoundFile.absolutePath)
+        backsoundPlayer.isLooping = true
+        backsoundPlayer.prepare()
+        backsoundPlayer.start()
+    }
+}
+```
+

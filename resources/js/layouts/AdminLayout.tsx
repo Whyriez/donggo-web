@@ -35,6 +35,12 @@ export default function AdminLayout({ children, title, subtitle, actions }: Admi
             active: url === '/admin' || url.startsWith('/admin/dashboard'),
         },
         {
+            name: 'Katalog Cerita & Media',
+            href: '/admin/stories',
+            icon: Film,
+            active: url.startsWith('/admin/stories'),
+        },
+        {
             name: 'Data Siswa & Monitoring',
             href: '/admin/users',
             icon: Users,

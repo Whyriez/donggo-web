@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DatabaseResetController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\LearnerUserController;
 use App\Http\Controllers\Admin\StoryAnalyticsController;
+use App\Http\Controllers\Admin\StoryManagementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Models\AppUser;
 use App\Models\Story;
@@ -47,8 +48,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/{id}', [LearnerUserController::class, 'show'])->name('users.show');
         Route::delete('/users/{id}', [LearnerUserController::class, 'destroy'])->name('users.destroy');
 
-        // Story & Scene Interactivity Matrix (dinonaktifkan sementara)
-        // Route::get('/stories', [StoryAnalyticsController::class, 'index'])->name('stories.index');
+        // Story, Media & Scene Management
+        Route::get('/stories', [StoryManagementController::class, 'index'])->name('stories.index');
+        Route::post('/stories', [StoryManagementController::class, 'store'])->name('stories.store');
+        Route::post('/stories/import-json', [StoryManagementController::class, 'importJson'])->name('stories.import-json');
+        Route::post('/stories/sync-storage', [StoryManagementController::class, 'syncStorageAssets'])->name('stories.sync-storage');
+        Route::match(['put', 'post'], '/stories/{story}', [StoryManagementController::class, 'update'])->name('stories.update');
+        Route::delete('/stories/{story}', [StoryManagementController::class, 'destroy'])->name('stories.destroy');
+
+        // Scene Management
+        Route::post('/stories/{story}/scenes', [StoryManagementController::class, 'storeScene'])->name('stories.scenes.store');
+        Route::match(['put', 'post'], '/stories/{story}/scenes/{scene}', [StoryManagementController::class, 'updateScene'])->name('stories.scenes.update');
+        Route::delete('/stories/{story}/scenes/{scene}', [StoryManagementController::class, 'destroyScene'])->name('stories.scenes.destroy');
 
         // Activity Logs
         Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');

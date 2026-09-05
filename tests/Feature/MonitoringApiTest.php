@@ -9,6 +9,8 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->seed(DonggoSeeder::class);
+    $apiKey = config('services.donggo.api_key') ?: env('DONGGO_API_KEY', 'donggo_secret_api_key_2026');
+    $this->withHeader('X-API-KEY', (string) $apiKey);
 });
 
 test('monitoring summary api returns statistics', function () {
@@ -159,6 +161,34 @@ test('stories catalog endpoint returns stories and scenes', function () {
                     'title',
                     'slug',
                     'scenes',
+                ],
+            ],
+        ]);
+});
+
+test('stories catalog endpoint returns download package info and dialogues', function () {
+    $response = $this->getJson('/api/v1/stories');
+
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            'status',
+            'data' => [
+                '*' => [
+                    'id',
+                    'storyId',
+                    'title',
+                    'fase',
+                    'downloadPackageUrl',
+                    'downloadSizeBytes',
+                    'downloadSizeFormatted',
+                    'scenes' => [
+                        '*' => [
+                            'sceneNumber',
+                            'videoMuteFile',
+                            'audioOriginalFile',
+                            'dialogues',
+                        ],
+                    ],
                 ],
             ],
         ]);

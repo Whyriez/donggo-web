@@ -16,9 +16,17 @@ class Scene extends Model
         'scene_number',
         'title',
         'video_asset',
+        'video_mute_file',
+        'audio_original_file',
         'character_name',
         'gorontalo_script',
         'indonesian_translation',
+        'dialogues',
+    ];
+
+    protected $casts = [
+        'scene_number' => 'integer',
+        'dialogues' => 'array',
     ];
 
     public function story(): BelongsTo

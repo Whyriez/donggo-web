@@ -30,112 +30,252 @@ class DonggoSeeder extends Seeder
         );
 
         // 2. Stories & Scenes
+        $packagesDir = storage_path('app/public/packages');
+        if (! file_exists($packagesDir)) {
+            mkdir($packagesDir, 0755, true);
+        }
+
+        $coversDir = storage_path('app/public/covers');
+        if (! file_exists($coversDir)) {
+            mkdir($coversDir, 0755, true);
+        }
+
         $storiesData = [
             [
+                'story_code' => 'story_1',
+                'slug' => 'hemolapula-lo-putito',
+                'title' => 'Hemolapula lo Putito',
+                'fase' => 'Fase A',
+                'description' => 'Kisah persahabatan dan kecerdikan kancil dan kera dalam cerita rakyat Gorontalo Hemolapula lo Putito.',
+                'category' => 'Cerita Rakyat Gorontalo',
+                'thumbnail' => '/images/hemolapula.jpg',
+                'cover_image' => 'cover_hemolapula_lo_putito.jpg',
+                'backsound_file' => 'backsound_story_1.mp3',
+                'download_package_url' => '/storage/packages/story_1.zip',
+                'download_size_bytes' => 15728640, // 15 MB
+                'scenes' => [
+                    [
+                        'scene_number' => 1,
+                        'title' => 'Scene 1: Pertemuan di Pinggir Hutan',
+                        'video_asset' => 'story_1_scene_1_video_mute.mp4',
+                        'video_mute_file' => 'story_1_scene_1_video_mute.mp4',
+                        'audio_original_file' => 'story_1_scene_1_audio.wav',
+                        'character_name' => 'Narator',
+                        'gorontalo_script' => 'Te Deka to o\'ayuwa.',
+                        'indonesian_translation' => 'Kancil berada di pinggir hutan lebat.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 2126,
+                                'endTimeMs' => 3228,
+                                'text' => 'Te Deka',
+                                'character' => 'Narator',
+                            ],
+                            [
+                                'id' => 2,
+                                'startTimeMs' => 3500,
+                                'endTimeMs' => 5200,
+                                'text' => 'Tidola to hungayo',
+                                'character' => 'Putito',
+                            ],
+                        ],
+                    ],
+                    [
+                        'scene_number' => 2,
+                        'title' => 'Scene 2: Di Bawah Pohon Rindang',
+                        'video_asset' => 'story_1_scene_2_video_mute.mp4',
+                        'video_mute_file' => 'story_1_scene_2_video_mute.mp4',
+                        'audio_original_file' => 'story_1_scene_2_audio.wav',
+                        'character_name' => 'Narator',
+                        'gorontalo_script' => 'To o\'ayuwa molingo.',
+                        'indonesian_translation' => 'Di dalam hutan yang sejuk dan tenang.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 5064,
+                                'endTimeMs' => 6442,
+                                'text' => 'To o\'ayuwa',
+                                'character' => 'Narator',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'story_code' => 'story_2',
                 'slug' => 'legenda-lahilote',
                 'title' => 'Legenda Lahilote (Batu Pohe)',
+                'fase' => 'Fase B',
                 'description' => 'Kisah heroik Lahilote yang bertemu dengan bidadari kahyangan di perbukitan Gorontalo dan jejak tapak kakinya yang melegenda di pesisir Pohe.',
                 'category' => 'Cerita Rakyat Gorontalo',
                 'thumbnail' => '/images/lahilote.jpg',
+                'cover_image' => 'cover_lahilote.jpg',
+                'backsound_file' => 'backsound_story_2.mp3',
+                'download_package_url' => '/storage/packages/story_2.zip',
+                'download_size_bytes' => 18874368, // 18 MB
                 'scenes' => [
                     [
                         'scene_number' => 1,
                         'title' => 'Scene 1: Pertemuan di Mata Air Hulu Sungai',
-                        'video_asset' => 'lahilote_scene_1.mp4',
+                        'video_asset' => 'story_2_scene_1_video_mute.mp4',
+                        'video_mute_file' => 'story_2_scene_1_video_mute.mp4',
+                        'audio_original_file' => 'story_2_scene_1_audio.wav',
                         'character_name' => 'Lahilote',
                         'gorontalo_script' => 'Oliyo ta mohelato, wau yilowali mota to hungayo.',
                         'indonesian_translation' => 'Dia sangat rupawan dan anggun, aku terpesona di tepi sungai.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1500,
+                                'endTimeMs' => 4200,
+                                'text' => 'Oliyo ta mohelato, wau yilowali mota to hungayo.',
+                                'character' => 'Lahilote',
+                            ],
+                        ],
                     ],
                     [
                         'scene_number' => 2,
                         'title' => 'Scene 2: Selendang Yang Disembunyikan',
-                        'video_asset' => 'lahilote_scene_2.mp4',
+                        'video_asset' => 'story_2_scene_2_video_mute.mp4',
+                        'video_mute_file' => 'story_2_scene_2_video_mute.mp4',
+                        'audio_original_file' => 'story_2_scene_2_audio.wav',
                         'character_name' => 'Putri Bidadari',
                         'gorontalo_script' => 'Tolianggu ma ilowali, wau dila mowali tumomboto ode kayangan.',
                         'indonesian_translation' => 'Selendangku telah hilang, aku tidak bisa lagi terbang kembali ke kayangan.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 2000,
+                                'endTimeMs' => 5500,
+                                'text' => 'Tolianggu ma ilowali, wau dila mowali tumomboto ode kayangan.',
+                                'character' => 'Putri Bidadari',
+                            ],
+                        ],
                     ],
                     [
                         'scene_number' => 3,
                         'title' => 'Scene 3: Janji Abadi & Jejak Tapak Raksasa di Pohe',
-                        'video_asset' => 'lahilote_scene_3.mp4',
+                        'video_asset' => 'story_2_scene_3_video_mute.mp4',
+                        'video_mute_file' => 'story_2_scene_3_video_mute.mp4',
+                        'audio_original_file' => 'story_2_scene_3_audio.wav',
                         'character_name' => 'Lahilote',
                         'gorontalo_script' => 'Hilawo woluo to olio, wau ma modudu\'o wolo hulawa to Pohe.',
                         'indonesian_translation' => 'Hatiku bersamanya, aku bersumpah meninggalkan jejak abadi di tanah Pohe.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1800,
+                                'endTimeMs' => 5100,
+                                'text' => 'Hilawo woluo to olio, wau ma modudu\'o wolo hulawa to Pohe.',
+                                'character' => 'Lahilote',
+                            ],
+                        ],
                     ],
                 ],
             ],
             [
+                'story_code' => 'story_3',
                 'slug' => 'asal-usul-danau-limboto',
                 'title' => 'Asal Usul Danau Limboto (Bulalo Limboto)',
+                'fase' => 'Fase C',
                 'description' => 'Dongeng terciptanya Danau Limboto dari mata air abadi yang membawa berkah kesuburan bagi rakyat Hulontalo.',
                 'category' => 'Legenda Alam',
                 'thumbnail' => '/images/limboto.jpg',
+                'cover_image' => 'cover_limboto.jpg',
+                'backsound_file' => 'backsound_story_3.mp3',
+                'download_package_url' => '/storage/packages/story_3.zip',
+                'download_size_bytes' => 14680064, // 14 MB
                 'scenes' => [
                     [
                         'scene_number' => 1,
                         'title' => 'Scene 1: Mata Air Suci di Lembah Hijau',
-                        'video_asset' => 'limboto_scene_1.mp4',
+                        'video_asset' => 'story_3_scene_1_video_mute.mp4',
+                        'video_mute_file' => 'story_3_scene_1_video_mute.mp4',
+                        'audio_original_file' => 'story_3_scene_1_audio.wav',
                         'character_name' => 'Tetua Adat',
                         'gorontalo_script' => 'Taluhu botiye londo Hulontalo, momongu batanga wawu lipu.',
                         'indonesian_translation' => 'Air suci ini berasal dari tanah Gorontalo, menghidupi raga dan menyuburkan negeri.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1200,
+                                'endTimeMs' => 4500,
+                                'text' => 'Taluhu botiye londo Hulontalo, momongu batanga wawu lipu.',
+                                'character' => 'Tetua Adat',
+                            ],
+                        ],
                     ],
                     [
                         'scene_number' => 2,
                         'title' => 'Scene 2: Terbentuknya Danau Kebanggaan Negeri',
-                        'video_asset' => 'limboto_scene_2.mp4',
+                        'video_asset' => 'story_3_scene_2_video_mute.mp4',
+                        'video_mute_file' => 'story_3_scene_2_video_mute.mp4',
+                        'audio_original_file' => 'story_3_scene_2_audio.wav',
                         'character_name' => 'Nelayan Muda',
                         'gorontalo_script' => 'Bulalo Limboto ma yilowali, tambati lo pongolapa wawu hidayah.',
                         'indonesian_translation' => 'Danau Limboto telah terhampar luas, tempat kita mencari rezeki penuh berkah.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1400,
+                                'endTimeMs' => 4900,
+                                'text' => 'Bulalo Limboto ma yilowali, tambati lo pongolapa wawu hidayah.',
+                                'character' => 'Nelayan Muda',
+                            ],
+                        ],
                     ],
                 ],
             ],
             [
+                'story_code' => 'story_4',
                 'slug' => 'olangia-pohalaa',
                 'title' => 'Olangia & Musyawarah Pohala\'a',
+                'fase' => 'Fase B',
                 'description' => 'Kisah persatuan lima kerajaan bersaudara (Limo Lo Pohala\'a) dalam menyelesaikan perbedaan dengan musyawarah Dulohupa.',
                 'category' => 'Sejarah & Nilai Luhur',
                 'thumbnail' => '/images/olangia.jpg',
+                'cover_image' => 'cover_olangia.jpg',
+                'backsound_file' => 'backsound_story_4.mp3',
+                'download_package_url' => '/storage/packages/story_4.zip',
+                'download_size_bytes' => 16777216, // 16 MB
                 'scenes' => [
                     [
                         'scene_number' => 1,
                         'title' => 'Scene 1: Musyawarah Dulohupa di Bantayo Poboide',
-                        'video_asset' => 'olangia_scene_1.mp4',
+                        'video_asset' => 'story_4_scene_1_video_mute.mp4',
+                        'video_mute_file' => 'story_4_scene_1_video_mute.mp4',
+                        'audio_original_file' => 'story_4_scene_1_audio.wav',
                         'character_name' => 'Raja Olangia',
                         'gorontalo_script' => 'Dulohupa lo lipu, mopiyohu tuwawu to hilawo da\'a.',
                         'indonesian_translation' => 'Musyawarah negeri, menyatukan niat baik dalam satu kebulatan tekad mufakat.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1500,
+                                'endTimeMs' => 4500,
+                                'text' => 'Dulohupa lo lipu, mopiyohu tuwawu to hilawo da\'a.',
+                                'character' => 'Raja Olangia',
+                            ],
+                        ],
                     ],
                     [
                         'scene_number' => 2,
                         'title' => 'Scene 2: Sumpah Persaudaraan Limo Lo Pohala\'a',
-                        'video_asset' => 'olangia_scene_2.mp4',
+                        'video_asset' => 'story_4_scene_2_video_mute.mp4',
+                        'video_mute_file' => 'story_4_scene_2_video_mute.mp4',
+                        'audio_original_file' => 'story_4_scene_2_audio.wav',
                         'character_name' => 'Ksatria Hulontalo',
                         'gorontalo_script' => 'Wau mopatodu sumpa, modaha lipu londo bala wawu panyake.',
                         'indonesian_translation' => 'Kuteguhkan sumpah setia, menjaga tanah air Gorontalo dari perselisihan.',
-                    ],
-                ],
-            ],
-            [
-                'slug' => 'putri-botutihe-karawo',
-                'title' => 'Putri Botutihe & Keindahan Kain Karawo',
-                'description' => 'Animasi edukasi tentang kesabaran, ketelitian, dan cinta dalam menyulam kain tradisional khas Gorontalo, Karawo.',
-                'category' => 'Seni Budaya Tradisional',
-                'thumbnail' => '/images/karawo.jpg',
-                'scenes' => [
-                    [
-                        'scene_number' => 1,
-                        'title' => 'Scene 1: Menarik Benang & Menyulam Motif Karawo',
-                        'video_asset' => 'karawo_scene_1.mp4',
-                        'character_name' => 'Putri Botutihe',
-                        'gorontalo_script' => 'Karawo botiye mopiyohu, heluma lo toliangu wawu sabari.',
-                        'indonesian_translation' => 'Sulaman Karawo ini sangat molek, buah dari cinta, ketekunan, dan kesabaran.',
-                    ],
-                    [
-                        'scene_number' => 2,
-                        'title' => 'Scene 2: Warisan Mahakarya Anak Negeri',
-                        'video_asset' => 'karawo_scene_2.mp4',
-                        'character_name' => 'Ibu Pengrajin',
-                        'gorontalo_script' => 'Pobelajariyo wopato, alihu dila ma lipata to timi\'idu wakutu.',
-                        'indonesian_translation' => 'Pelajarilah dengan sungguh-sungguh, agar warisan agung ini lestari selamanya.',
+                        'dialogues' => [
+                            [
+                                'id' => 1,
+                                'startTimeMs' => 1600,
+                                'endTimeMs' => 4800,
+                                'text' => 'Wau mopatodu sumpa, modaha lipu londo bala wawu panyake.',
+                                'character' => 'Ksatria Hulontalo',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -148,6 +288,29 @@ class DonggoSeeder extends Seeder
             $scenes = $sData['scenes'];
             unset($sData['scenes']);
             $sData['total_scenes'] = count($scenes);
+
+            // Create sample ZIP package if not exists
+            $zipPath = $packagesDir . '/' . ($sData['story_code'] ?? $sData['slug']) . '.zip';
+            if (! file_exists($zipPath)) {
+                $zip = new \ZipArchive();
+                if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+                    $zip->addFromString('info.txt', 'Donggo Story Package for ' . $sData['title']);
+                    $zip->addFromString(($sData['backsound_file'] ?? 'backsound.mp3'), "DUMMY AUDIO DATA");
+                    foreach ($scenes as $sc) {
+                        if (! empty($sc['video_mute_file'])) {
+                            $zip->addFromString($sc['video_mute_file'], "DUMMY VIDEO DATA FOR SCENE " . $sc['scene_number']);
+                        }
+                        if (! empty($sc['audio_original_file'])) {
+                            $zip->addFromString($sc['audio_original_file'], "DUMMY AUDIO DATA FOR SCENE " . $sc['scene_number']);
+                        }
+                    }
+                    $zip->close();
+                }
+            }
+
+            if (file_exists($zipPath)) {
+                $sData['download_size_bytes'] = filesize($zipPath);
+            }
 
             $story = Story::updateOrCreate(['slug' => $sData['slug']], $sData);
             $createdStories[$story->title] = $story;

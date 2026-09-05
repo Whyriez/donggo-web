@@ -430,9 +430,81 @@ class MonitoringApiController extends Controller
     {
         $stories = Story::with(['scenes'])->orderBy('id')->get();
 
+        $formatted = $stories->map(function (Story $story) {
+            $storyCode = $story->story_code ?: ('story_' . $story->id);
+            $zipPath = storage_path('app/public/packages/' . $storyCode . '.zip');
+
+            $sizeBytes = file_exists($zipPath)
+                ? filesize($zipPath)
+                : ($story->download_size_bytes ?: 15728640);
+
+            $downloadUrl = $story->download_package_url
+                ? url($story->download_package_url)
+                : url('/storage/packages/' . $storyCode . '.zip');
+
+            $coverUrl = $story->cover_image
+                ? url('/storage/covers/' . $story->cover_image)
+                : ($story->thumbnail ? url($story->thumbnail) : null);
+
+            $backsoundUrl = $story->backsound_file
+                ? url('/storage/packages/' . $story->backsound_file)
+                : null;
+
+            $formattedScenes = $story->scenes->map(function (Scene $scene) {
+                return [
+                    'id' => $scene->id,
+                    'sceneNumber' => $scene->scene_number,
+                    'scene_number' => $scene->scene_number,
+                    'title' => $scene->title,
+                    'videoMuteFile' => $scene->video_mute_file ?: $scene->video_asset,
+                    'video_mute_file' => $scene->video_mute_file ?: $scene->video_asset,
+                    'audioOriginalFile' => $scene->audio_original_file,
+                    'audio_original_file' => $scene->audio_original_file,
+                    'characterName' => $scene->character_name,
+                    'character_name' => $scene->character_name,
+                    'gorontaloScript' => $scene->gorontalo_script,
+                    'gorontalo_script' => $scene->gorontalo_script,
+                    'indonesianTranslation' => $scene->indonesian_translation,
+                    'indonesian_translation' => $scene->indonesian_translation,
+                    'dialogues' => $scene->dialogues ?: [],
+                ];
+            });
+
+            // Format download size into human-readable string (e.g. "15 MB" or "940 KB")
+            $sizeFormatted = $sizeBytes >= 1048576
+                ? round($sizeBytes / 1048576, 1) . ' MB'
+                : round($sizeBytes / 1024, 1) . ' KB';
+
+            return [
+                'id' => $story->id,
+                'storyId' => $storyCode,
+                'story_id' => $storyCode,
+                'slug' => $story->slug,
+                'title' => $story->title,
+                'fase' => $story->fase ?: 'Fase A',
+                'category' => $story->category,
+                'description' => $story->description,
+                'coverImage' => $story->cover_image ?: 'cover_' . $story->slug,
+                'cover_image' => $story->cover_image,
+                'cover_url' => $coverUrl,
+                'backsoundFile' => $story->backsound_file,
+                'backsound_file' => $story->backsound_file,
+                'backsound_url' => $backsoundUrl,
+                'downloadPackageUrl' => $downloadUrl,
+                'download_package_url' => $downloadUrl,
+                'downloadSizeBytes' => $sizeBytes,
+                'download_size_bytes' => $sizeBytes,
+                'downloadSizeFormatted' => $sizeFormatted,
+                'download_size_formatted' => $sizeFormatted,
+                'totalScenes' => $story->scenes->count(),
+                'total_scenes' => $story->scenes->count(),
+                'scenes' => $formattedScenes,
+            ];
+        });
+
         return response()->json([
             'status' => 'success',
-            'data' => $stories,
+            'data' => $formatted,
         ]);
     }
 
